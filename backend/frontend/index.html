@@ -723,7 +723,7 @@
 <script>
     // LOCAL DEVELOPMENT BACKEND URL
     const API_URL = "http://127.0.0.1:8000/predict";
-    const VISITOR_API_URL = "http://127.0.0.1:8000/visitors";
+    const VISITOR_API_URL = "https://script.google.com/macros/s/AKfycbyVFLAeO-kQguna4jQCfJ02brCQOeuJE_mq6Ot7__OdhjV5Yw3Q_6kklLDMgcaln7Uu/exec";
 
     const HISTORY_KEY = "studentMarksPredictionHistory";
     const PAGE_VIEWS_KEY = "studentMarksPageViews";
@@ -803,7 +803,8 @@
         document.getElementById("sessionPredictions").textContent = count;
     }
 
-    // Welcome popup and database submission.
+    
+    // Welcome popup and Google Sheets visitor submission.
     function checkVisitorStatus() {
         try {
             if (localStorage.getItem(VISITOR_SAVED_KEY) === "yes") {
@@ -814,7 +815,7 @@
         }
     }
 
-    visitorForm.addEventListener("submit", async event => {
+    visitorForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         visitorStatus.style.display = "none";
@@ -823,7 +824,14 @@
         const location = document.getElementById("visitorLocation").value.trim();
         const consent = document.getElementById("visitorConsent").checked;
 
-        if (name.length < 2 || location.length < 2 || !consent) {
+        if (
+            name.length < 2 ||
+            name.length > 80 ||
+            location.length < 2 ||
+            location.length > 120 ||
+            !consent
+        ) {
+            visitorStatus.style.color = "#b91c1c";
             visitorStatus.textContent =
                 "Please enter a valid name and location and provide consent.";
             visitorStatus.style.display = "block";
@@ -831,42 +839,41 @@
         }
 
         visitorSubmit.disabled = true;
-        visitorSubmit.textContent = "Saving your details...";
+        visitorSubmit.textContent = "Submitting...";
 
         try {
-            const response = await fetch(VISITOR_API_URL, {
+            await fetch(VISITOR_API_URL, {
                 method: "POST",
+                mode: "no-cors",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "text/plain;charset=utf-8"
                 },
                 body: JSON.stringify({
-                    name,
-                    location,
-                    consent
+                    name: name,
+                    location: location,
+                    consent: true
                 })
             });
 
-            const data = await response.json();
+            // Remember the visitor in this browser.
+            localStorage.setItem(VISITOR_SAVED_KEY, "yes");
 
-            if (!response.ok) {
-                throw new Error(data.detail || "Unable to save your details.");
-            }
+            visitorStatus.style.color = "#15803d";
+            visitorStatus.textContent =
+                "Details sent. Please verify the entry in Google Sheet.";
+            visitorStatus.style.display = "block";
 
-            try {
-                localStorage.setItem(VISITOR_SAVED_KEY, "yes");
-            } catch (error) {
-                console.error("Could not save browser status:", error);
-            }
-
-            welcomeOverlay.hidden = true;
+            // Close the popup and reveal the main prediction page.
+            setTimeout(() => {
+                welcomeOverlay.hidden = true;
+            }, 700);
 
         } catch (error) {
             console.error("Visitor submission error:", error);
 
+            visitorStatus.style.color = "#b91c1c";
             visitorStatus.textContent =
-                "Your details could not be saved. Please make sure the backend " +
-                "is running, then try again.";
-
+                "Could not send your details. Please check your internet connection and try again.";
             visitorStatus.style.display = "block";
 
         } finally {
@@ -874,6 +881,8 @@
             visitorSubmit.textContent = "Continue to Website →";
         }
     });
+
+    
 
     // Prediction history
     function loadHistory() {
