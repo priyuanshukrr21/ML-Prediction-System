@@ -4,57 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Student Marks Predictor</title>
+    <meta name="description" content="Student Marks Prediction System powered by Machine Learning.">
+    <title>Student Marks Predictor | Priyanshu Kumar</title>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: Arial, sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 24px;
             color: #1e293b;
         }
 
         .container {
-            width: 100%;
-            max-width: 560px;
-            background: #ffffff;
-            padding: 32px;
-            border-radius: 22px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            max-width: 1050px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px #0003;
         }
 
         .tag {
             display: inline-block;
-            padding: 8px 12px;
-            border-radius: 20px;
             background: #dbeafe;
             color: #1d4ed8;
+            padding: 8px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         h1 {
-            font-size: 28px;
-            line-height: 1.3;
+            font-size: 30px;
             margin-bottom: 12px;
         }
 
-        .description {
+        h2 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .description, .muted {
             color: #64748b;
-            line-height: 1.7;
-            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .description {
+            margin-bottom: 24px;
+        }
+
+        .muted {
+            font-size: 14px;
+        }
+
+        .section {
+            margin-top: 32px;
         }
 
         label {
@@ -69,26 +81,17 @@
             border: 1px solid #cbd5e1;
             border-radius: 10px;
             font-size: 16px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px #dbeafe;
         }
 
         button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 16px;
-            border: none;
+            padding: 13px 16px;
+            margin-top: 14px;
+            border: 0;
             border-radius: 10px;
             background: #2563eb;
             color: white;
-            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
         button:hover {
@@ -96,70 +99,84 @@
         }
 
         button:disabled {
-            opacity: 0.6;
+            opacity: .6;
             cursor: wait;
         }
 
         .result {
             display: none;
-            margin-top: 24px;
-            padding: 24px 16px;
-            border-radius: 14px;
             background: #eff6ff;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 22px;
             text-align: center;
         }
 
         .result h2 {
             color: #1d4ed8;
             font-size: 16px;
-            margin-bottom: 12px;
         }
 
         .marks {
-            font-size: 44px;
+            font-size: 42px;
             font-weight: bold;
             color: #1e40af;
-            overflow-wrap: anywhere;
-        }
-
-        .result-message {
-            margin-top: 8px;
-            color: #475569;
-            font-size: 14px;
+            margin: 8px;
         }
 
         .error {
             display: none;
-            margin-top: 16px;
+            margin-top: 14px;
             padding: 12px;
-            border-radius: 8px;
             background: #fef2f2;
             color: #b91c1c;
-            font-size: 14px;
+            border-radius: 8px;
             line-height: 1.5;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .stat-card {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .stat-card p {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .stat-card strong {
+            font-size: 27px;
+            color: #1e40af;
             overflow-wrap: anywhere;
         }
 
-        .history-section {
-            margin-top: 30px;
-            padding-top: 24px;
-            border-top: 1px solid #e2e8f0;
+        .chart-card {
+            margin-top: 18px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
         }
 
-        .history-section h2 {
-            font-size: 21px;
-            margin-bottom: 8px;
+        canvas {
+            display: block;
+            width: 100%;
+            height: 280px;
         }
 
-        .history-description {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        .history-table-wrapper {
+        .table-wrapper {
             overflow-x: auto;
+            margin-top: 14px;
         }
 
         table {
@@ -168,11 +185,10 @@
             font-size: 14px;
         }
 
-        th,
-        td {
-            padding: 13px 10px;
-            text-align: left;
+        th, td {
+            padding: 12px 10px;
             border-bottom: 1px solid #e2e8f0;
+            text-align: left;
         }
 
         th {
@@ -180,78 +196,96 @@
             color: #1e40af;
         }
 
-        .empty-row {
-            color: #64748b;
+        .empty {
             text-align: center;
+            color: #64748b;
         }
 
         .clear-button {
             background: #e2e8f0;
             color: #334155;
-            margin-top: 14px;
         }
 
         .clear-button:hover {
             background: #cbd5e1;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 26px;
-            color: #94a3b8;
-            font-size: 12px;
-            line-height: 1.6;
+        .notice {
+            background: #fffbeb;
+            color: #92400e;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 14px;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
-        @media (max-width: 480px) {
+        footer {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 650px) {
             body {
-                padding: 14px;
-                align-items: flex-start;
+                padding: 12px;
             }
 
             .container {
-                padding: 24px 18px;
-                border-radius: 16px;
+                padding: 20px 16px;
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 25px;
             }
 
-            .marks {
-                font-size: 38px;
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 15px;
             }
         }
     </style>
 </head>
 
 <body>
+<main class="container">
 
-    <main class="container">
+    <span class="tag">MACHINE LEARNING PROJECT</span>
 
-        <span class="tag">MACHINE LEARNING PROJECT</span>
+    <h1>Student Marks Predictor 🎓</h1>
 
-        <h1>Student Marks Predictor 🎓</h1>
+    <p class="description">
+        Enter your daily study hours to estimate marks using a trained
+        Machine Learning model.
+    </p>
 
-        <p class="description">
-            Enter your daily study hours and let our Machine Learning
-            model estimate your marks.
-        </p>
-
+    <!-- PREDICTION FORM -->
+    <section>
         <form id="predictionForm">
             <label for="studyHours">Study Hours Per Day</label>
 
             <input
-                type="number"
                 id="studyHours"
-                placeholder="Example: 6"
+                type="number"
                 min="0"
                 max="24"
                 step="any"
+                placeholder="Example: 6"
                 required
             >
 
-            <button type="submit" id="predictButton">
+            <button id="predictButton" type="submit">
                 Predict My Marks
             </button>
         </form>
@@ -259,249 +293,489 @@
         <div class="result" id="result" aria-live="polite">
             <h2>Predicted Marks</h2>
             <div class="marks" id="marks">0</div>
-            <p class="result-message" id="resultMessage"></p>
+            <p class="muted" id="resultMessage"></p>
         </div>
 
         <p class="error" id="error" role="alert"></p>
+    </section>
 
-        <section class="history-section">
-            <h2>Prediction History</h2>
+    <!-- VIEWER ANALYTICS -->
+    <section class="section">
+        <h2>Website Viewer Analytics 📊</h2>
+        <p class="muted">
+            Basic website usage statistics recorded in this browser.
+        </p>
 
-            <p class="history-description">
-                Your recent predictions are saved in this browser.
-            </p>
-
-            <div class="history-table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Study Hours</th>
-                            <th>Predicted Marks</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="historyBody">
-                        <tr>
-                            <td colspan="2" class="empty-row">
-                                No predictions yet.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="stats">
+            <div class="stat-card">
+                <p>Page Views</p>
+                <strong id="pageViews">0</strong>
             </div>
 
-            <button
-                type="button"
-                id="clearHistory"
-                class="clear-button"
-            >
-                Clear History
-            </button>
-        </section>
+            <div class="stat-card">
+                <p>Browser Sessions</p>
+                <strong id="browserSessions">0</strong>
+            </div>
 
-        <footer>
-            Powered by Python, Scikit-learn & FastAPI
-        </footer>
+            <div class="stat-card">
+                <p>Predictions This Session</p>
+                <strong id="sessionPredictions">0</strong>
+            </div>
+        </div>
 
-    </main>
+        <div class="notice">
+            Note: These viewer statistics are stored in this browser only.
+            They do not represent the total visitors across all users or devices.
+        </div>
+    </section>
 
-    <script>
-        // 1. Get HTML elements
-        const form = document.getElementById("predictionForm");
-        const studyHoursInput = document.getElementById("studyHours");
-        const predictButton = document.getElementById("predictButton");
+    <!-- PREDICTION ANALYTICS -->
+    <section class="section">
+        <h2>Prediction Analytics</h2>
+        <p class="muted">
+            Statistics calculated from prediction history saved in this browser.
+        </p>
 
-        const result = document.getElementById("result");
-        const marks = document.getElementById("marks");
-        const resultMessage = document.getElementById("resultMessage");
-        const error = document.getElementById("error");
+        <div class="stats">
+            <div class="stat-card">
+                <p>Total Saved Predictions</p>
+                <strong id="totalPredictions">0</strong>
+            </div>
 
-        const historyBody = document.getElementById("historyBody");
-        const clearHistoryButton = document.getElementById("clearHistory");
+            <div class="stat-card">
+                <p>Average Predicted Marks</p>
+                <strong id="averageMarks">—</strong>
+            </div>
 
-        const HISTORY_KEY = "studentMarksPredictionHistory";
+            <div class="stat-card">
+                <p>Highest Prediction</p>
+                <strong id="highestMarks">—</strong>
+            </div>
+        </div>
+    </section>
 
-        // 2. Load saved history from this browser
-        function loadHistory() {
-            try {
-                const savedHistory = localStorage.getItem(HISTORY_KEY);
-                const parsedHistory = savedHistory
-                    ? JSON.parse(savedHistory)
-                    : [];
+    <!-- CHART -->
+    <section class="section">
+        <h2>Study Hours vs Predicted Marks</h2>
+        <p class="muted">
+            The chart updates whenever a new prediction is generated.
+        </p>
 
-                if (!Array.isArray(parsedHistory)) {
-                    return [];
-                }
+        <div class="chart-card">
+            <canvas
+                id="predictionChart"
+                role="img"
+                aria-label="Chart showing study hours and predicted marks">
+            </canvas>
 
-                return parsedHistory.filter(item =>
-                    item &&
-                    Number.isFinite(item.hours) &&
-                    Number.isFinite(item.marks)
-                );
-            } catch (err) {
-                console.error("Could not load history:", err);
+            <p class="muted" id="chartMessage">
+                Make a prediction to display the chart.
+            </p>
+        </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="section">
+        <h2>Prediction History</h2>
+        <p class="muted">
+            The latest 20 predictions are saved in this browser.
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date &amp; Time</th>
+                        <th>Study Hours</th>
+                        <th>Predicted Marks</th>
+                    </tr>
+                </thead>
+
+                <tbody id="historyBody">
+                    <tr>
+                        <td colspan="3" class="empty">No predictions yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="clear-button" id="clearHistory">
+            Clear Prediction History
+        </button>
+    </section>
+
+    <!-- BRANDING -->
+    <footer>
+        <div>Student Marks Prediction System</div>
+        <div>Built with Python, Scikit-learn &amp; FastAPI</div>
+        <div>Powered by <strong>Priyanshu Kumar</strong> 🚀</div>
+    </footer>
+
+</main>
+
+<script>
+    // IMPORTANT:
+    // This URL is for local development.
+    // Change it when your backend is deployed online.
+    const API_URL = "http://127.0.0.1:8000/predict";
+
+    const HISTORY_KEY = "studentMarksPredictionHistory";
+    const PAGE_VIEWS_KEY = "studentMarksPageViews";
+    const SESSIONS_KEY = "studentMarksBrowserSessions";
+    const SESSION_ACTIVE_KEY = "studentMarksSessionActive";
+    const SESSION_PREDICTIONS_KEY = "studentMarksSessionPredictions";
+
+    const form = document.getElementById("predictionForm");
+    const hoursInput = document.getElementById("studyHours");
+    const predictButton = document.getElementById("predictButton");
+    const result = document.getElementById("result");
+    const marksElement = document.getElementById("marks");
+    const resultMessage = document.getElementById("resultMessage");
+    const errorElement = document.getElementById("error");
+    const historyBody = document.getElementById("historyBody");
+
+    // Safely read numeric values from localStorage.
+    function readCounter(key) {
+        try {
+            const value = Number(localStorage.getItem(key) || 0);
+            return Number.isSafeInteger(value) && value >= 0 ? value : 0;
+        } catch (error) {
+            console.error("Could not read browser analytics:", error);
+            return 0;
+        }
+    }
+
+    function writeCounter(key, value) {
+        try {
+            localStorage.setItem(key, String(value));
+        } catch (error) {
+            console.error("Could not save browser analytics:", error);
+        }
+    }
+
+    // Record a page view in this browser.
+    function recordPageView() {
+        writeCounter(PAGE_VIEWS_KEY, readCounter(PAGE_VIEWS_KEY) + 1);
+
+        // Count a browser session once per sessionStorage lifecycle.
+        try {
+            if (sessionStorage.getItem(SESSION_ACTIVE_KEY) !== "yes") {
+                writeCounter(SESSIONS_KEY, readCounter(SESSIONS_KEY) + 1);
+                sessionStorage.setItem(SESSION_ACTIVE_KEY, "yes");
+                sessionStorage.setItem(SESSION_PREDICTIONS_KEY, "0");
+            }
+        } catch (error) {
+            console.error("Could not record browser session:", error);
+        }
+
+        renderViewerAnalytics();
+    }
+
+    function renderViewerAnalytics() {
+        document.getElementById("pageViews").textContent =
+            readCounter(PAGE_VIEWS_KEY);
+
+        document.getElementById("browserSessions").textContent =
+            readCounter(SESSIONS_KEY);
+
+        let sessionPredictions = 0;
+
+        try {
+            sessionPredictions = Number(
+                sessionStorage.getItem(SESSION_PREDICTIONS_KEY) || 0
+            );
+
+            if (!Number.isSafeInteger(sessionPredictions) ||
+                sessionPredictions < 0) {
+                sessionPredictions = 0;
+            }
+        } catch (error) {
+            console.error("Could not read session predictions:", error);
+        }
+
+        document.getElementById("sessionPredictions").textContent =
+            sessionPredictions;
+    }
+
+    // Load saved prediction history.
+    function loadHistory() {
+        try {
+            const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+
+            if (!Array.isArray(data)) {
                 return [];
             }
+
+            return data.filter(item =>
+                item &&
+                Number.isFinite(item.hours) &&
+                Number.isFinite(item.marks) &&
+                typeof item.date === "string"
+            ).slice(0, 20);
+        } catch (error) {
+            console.error("Could not load prediction history:", error);
+            return [];
         }
+    }
 
-        let predictionHistory = loadHistory();
+    let history = loadHistory();
 
-        // 3. Save history in browser storage
-        function saveHistory() {
-            try {
-                localStorage.setItem(
-                    HISTORY_KEY,
-                    JSON.stringify(predictionHistory)
-                );
-            } catch (err) {
-                console.error("Could not save history:", err);
-                showError(
-                    "Prediction completed, but history could not be saved."
-                );
-            }
+    function saveHistory() {
+        try {
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        } catch (error) {
+            console.error("Could not save prediction history:", error);
+            showError("Prediction worked, but history could not be saved.");
         }
+    }
 
-        // 4. Display prediction history
-        function renderHistory() {
-            historyBody.replaceChildren();
+    function showError(message) {
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+    }
 
-            if (predictionHistory.length === 0) {
-                const row = document.createElement("tr");
-                const cell = document.createElement("td");
+    function formatDate(dateString) {
+        const date = new Date(dateString);
 
-                cell.colSpan = 2;
-                cell.className = "empty-row";
-                cell.textContent = "No predictions yet.";
+        return Number.isNaN(date.getTime())
+            ? "Unknown"
+            : date.toLocaleString();
+    }
 
-                row.appendChild(cell);
-                historyBody.appendChild(row);
-                return;
-            }
+    // Display prediction history safely.
+    function renderHistory() {
+        historyBody.replaceChildren();
 
-            predictionHistory.forEach(item => {
-                const row = document.createElement("tr");
+        if (history.length === 0) {
+            const row = historyBody.insertRow();
+            const cell = row.insertCell();
 
-                const hoursCell = document.createElement("td");
-                hoursCell.textContent = String(item.hours);
+            cell.colSpan = 3;
+            cell.className = "empty";
+            cell.textContent = "No predictions yet.";
+        } else {
+            history.forEach(item => {
+                const row = historyBody.insertRow();
 
-                const marksCell = document.createElement("td");
-                marksCell.textContent = String(item.marks);
-
-                row.appendChild(hoursCell);
-                row.appendChild(marksCell);
-
-                historyBody.appendChild(row);
+                row.insertCell().textContent = formatDate(item.date);
+                row.insertCell().textContent = String(item.hours);
+                row.insertCell().textContent = String(item.marks);
             });
         }
 
-        // 5. Display errors
-        function showError(message) {
-            error.textContent = message;
-            error.style.display = "block";
+        renderStats();
+        drawChart();
+    }
+
+    function renderStats() {
+        document.getElementById("totalPredictions").textContent =
+            history.length;
+
+        if (history.length === 0) {
+            document.getElementById("averageMarks").textContent = "—";
+            document.getElementById("highestMarks").textContent = "—";
+            return;
         }
 
-        // 6. Handle prediction form submission
-        form.addEventListener("submit", async function (event) {
-            event.preventDefault();
+        const average = history.reduce(
+            (sum, item) => sum + item.marks, 0
+        ) / history.length;
 
-            const rawHours = studyHoursInput.value.trim();
-            const studyHours = Number(rawHours);
+        const highest = Math.max(...history.map(item => item.marks));
 
-            result.style.display = "none";
-            error.style.display = "none";
+        document.getElementById("averageMarks").textContent =
+            average.toFixed(2);
 
-            if (
-                rawHours === "" ||
-                !Number.isFinite(studyHours) ||
-                studyHours < 0 ||
-                studyHours > 24
-            ) {
-                showError(
-                    "Please enter a valid study duration between 0 and 24 hours."
-                );
-                return;
-            }
+        document.getElementById("highestMarks").textContent =
+            highest.toFixed(2);
+    }
 
-            predictButton.disabled = true;
-            predictButton.textContent = "Predicting...";
+    // Draw the prediction chart.
+    function drawChart() {
+        const canvas = document.getElementById("predictionChart");
+        const ctx = canvas.getContext("2d");
+        const message = document.getElementById("chartMessage");
 
-            try {
-                const response = await fetch(
-                    "http://127.0.0.1:8000/predict",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            study_hours: studyHours
-                        })
-                    }
-                );
+        const width = canvas.clientWidth;
 
-                const data = await response.json();
+        if (width <= 0) {
+            return;
+        }
 
-                if (!response.ok) {
-                    throw new Error(
-                        typeof data.detail === "string"
-                            ? data.detail
-                            : "Prediction request failed."
-                    );
-                }
+        const height = 280;
+        const ratio = window.devicePixelRatio || 1;
 
-                if (!Number.isFinite(data.predicted_marks)) {
-                    throw new Error("The API returned an invalid prediction.");
-                }
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
 
-                // Display prediction
-                marks.textContent = data.predicted_marks;
-                resultMessage.textContent =
-                    `For ${data.study_hours} study hours per day`;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, width, height);
 
-                result.style.display = "block";
+        if (history.length === 0) {
+            message.textContent = "Make a prediction to display the chart.";
+            return;
+        }
 
-                // Add newest prediction to history
-                predictionHistory.unshift({
-                    hours: data.study_hours,
-                    marks: data.predicted_marks
-                });
+        message.textContent =
+            "Each point represents a saved prediction.";
 
-                // Keep only the latest 20 records
-                predictionHistory = predictionHistory.slice(0, 20);
+        const left = 45;
+        const right = 18;
+        const top = 20;
+        const bottom = 42;
 
-                // Save and refresh history table
-                saveHistory();
-                renderHistory();
+        const plotWidth = width - left - right;
+        const plotHeight = height - top - bottom;
 
-            } catch (err) {
-                console.error("Prediction error:", err);
+        ctx.font = "12px Arial";
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.fillStyle = "#64748b";
 
-                showError(
-                    "Could not connect to the backend. Make sure FastAPI is running at http://127.0.0.1:8000 and try again."
-                );
+        for (let i = 0; i <= 5; i++) {
+            const value = i * 20;
+            const y = top + plotHeight - (value / 100) * plotHeight;
 
-            } finally {
-                predictButton.disabled = false;
-                predictButton.textContent = "Predict My Marks";
-            }
+            ctx.beginPath();
+            ctx.moveTo(left, y);
+            ctx.lineTo(width - right, y);
+            ctx.stroke();
+
+            ctx.fillText(String(value), 8, y + 4);
+        }
+
+        ctx.fillText("Marks", 8, 12);
+        ctx.fillText(
+            "Study hours →",
+            Math.max(left, width / 2 - 40),
+            height - 8
+        );
+
+        history.slice().reverse().forEach(item => {
+            const x = left + (item.hours / 24) * plotWidth;
+            const y = top + plotHeight - (item.marks / 100) * plotHeight;
+
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = "#2563eb";
+            ctx.fill();
         });
+    }
 
-        // 7. Clear prediction history
-        clearHistoryButton.addEventListener("click", function () {
-            predictionHistory = [];
+    // Call the FastAPI prediction endpoint.
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
 
-            try {
-                localStorage.removeItem(HISTORY_KEY);
-            } catch (err) {
-                console.error("Could not clear saved history:", err);
+        const rawHours = hoursInput.value.trim();
+        const hours = Number(rawHours);
+
+        result.style.display = "none";
+        errorElement.style.display = "none";
+
+        if (rawHours === "" ||
+            !Number.isFinite(hours) ||
+            hours < 0 ||
+            hours > 24) {
+            showError("Please enter study hours between 0 and 24.");
+            return;
+        }
+
+        predictButton.disabled = true;
+        predictButton.textContent = "Predicting...";
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    study_hours: hours
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.detail
+                        ? JSON.stringify(data.detail)
+                        : "Prediction request failed."
+                );
             }
 
+            if (!Number.isFinite(data.predicted_marks)) {
+                throw new Error("The API returned an invalid prediction.");
+            }
+
+            marksElement.textContent = data.predicted_marks;
+            resultMessage.textContent =
+                `For ${data.study_hours} study hours per day`;
+
+            result.style.display = "block";
+
+            history.unshift({
+                hours: data.study_hours,
+                marks: data.predicted_marks,
+                date: new Date().toISOString()
+            });
+
+            history = history.slice(0, 20);
+
+            saveHistory();
             renderHistory();
-        });
 
-        // 8. Show history when page loads
+            // Count successful predictions during this browser session.
+            try {
+                const count = Number(
+                    sessionStorage.getItem(SESSION_PREDICTIONS_KEY) || 0
+                );
+
+                sessionStorage.setItem(
+                    SESSION_PREDICTIONS_KEY,
+                    String(
+                        Number.isSafeInteger(count) && count >= 0
+                            ? count + 1
+                            : 1
+                    )
+                );
+            } catch (error) {
+                console.error("Could not update session counter:", error);
+            }
+
+            renderViewerAnalytics();
+
+        } catch (error) {
+            console.error("Prediction error:", error);
+
+            showError(
+                "Could not connect to the backend. Make sure FastAPI is " +
+                "running at http://127.0.0.1:8000."
+            );
+        } finally {
+            predictButton.disabled = false;
+            predictButton.textContent = "Predict My Marks";
+        }
+    });
+
+    // Clear only prediction history, not viewer analytics.
+    document.getElementById("clearHistory").addEventListener("click", () => {
+        history = [];
+
+        try {
+            localStorage.removeItem(HISTORY_KEY);
+        } catch (error) {
+            console.error("Could not clear prediction history:", error);
+        }
+
         renderHistory();
-    </script>
+    });
 
+    window.addEventListener("resize", drawChart);
+
+    // Initialize the page.
+    recordPageView();
+    renderHistory();
+</script>
 </body>
 </html>
