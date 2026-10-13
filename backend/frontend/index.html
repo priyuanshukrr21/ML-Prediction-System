@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Student Marks Predictor</title>
 
     <style>
@@ -20,22 +21,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 24px;
             color: #1e293b;
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
-            background: white;
-            padding: 35px;
-            border-radius: 20px;
+            max-width: 560px;
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 22px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
 
         .tag {
             display: inline-block;
-            padding: 7px 12px;
+            padding: 8px 12px;
             border-radius: 20px;
             background: #dbeafe;
             color: #1d4ed8;
@@ -46,12 +47,13 @@
 
         h1 {
             font-size: 28px;
+            line-height: 1.3;
             margin-bottom: 12px;
         }
 
         .description {
             color: #64748b;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 28px;
         }
 
@@ -77,8 +79,8 @@
 
         button {
             width: 100%;
-            padding: 15px;
-            margin-top: 18px;
+            padding: 14px;
+            margin-top: 16px;
             border: none;
             border-radius: 10px;
             background: #2563eb;
@@ -86,6 +88,7 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
         }
 
         button:hover {
@@ -99,51 +102,140 @@
 
         .result {
             display: none;
-            margin-top: 25px;
-            padding: 22px;
-            border-radius: 12px;
+            margin-top: 24px;
+            padding: 24px 16px;
+            border-radius: 14px;
             background: #eff6ff;
             text-align: center;
         }
 
         .result h2 {
             color: #1d4ed8;
-            font-size: 15px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 12px;
         }
 
         .marks {
-            font-size: 42px;
+            font-size: 44px;
             font-weight: bold;
             color: #1e40af;
+            overflow-wrap: anywhere;
+        }
+
+        .result-message {
+            margin-top: 8px;
+            color: #475569;
+            font-size: 14px;
         }
 
         .error {
             display: none;
             margin-top: 16px;
-            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fef2f2;
+            color: #b91c1c;
             font-size: 14px;
             line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .history-section {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .history-section h2 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .history-description {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .history-table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .empty-row {
+            color: #64748b;
+            text-align: center;
+        }
+
+        .clear-button {
+            background: #e2e8f0;
+            color: #334155;
+            margin-top: 14px;
+        }
+
+        .clear-button:hover {
+            background: #cbd5e1;
         }
 
         footer {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 26px;
             color: #94a3b8;
             font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 24px 18px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .marks {
+                font-size: 38px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <main class="container">
+
         <span class="tag">MACHINE LEARNING PROJECT</span>
 
         <h1>Student Marks Predictor 🎓</h1>
 
         <p class="description">
-            Enter your daily study hours and let our
-            Machine Learning model predict your marks.
+            Enter your daily study hours and let our Machine Learning
+            model estimate your marks.
         </p>
 
         <form id="predictionForm">
@@ -164,44 +256,169 @@
             </button>
         </form>
 
-        <div class="result" id="result">
+        <div class="result" id="result" aria-live="polite">
             <h2>Predicted Marks</h2>
             <div class="marks" id="marks">0</div>
-            <p id="resultMessage"></p>
+            <p class="result-message" id="resultMessage"></p>
         </div>
 
-        <p class="error" id="error"></p>
+        <p class="error" id="error" role="alert"></p>
+
+        <section class="history-section">
+            <h2>Prediction History</h2>
+
+            <p class="history-description">
+                Your recent predictions are saved in this browser.
+            </p>
+
+            <div class="history-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Study Hours</th>
+                            <th>Predicted Marks</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="2" class="empty-row">
+                                No predictions yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button
+                type="button"
+                id="clearHistory"
+                class="clear-button"
+            >
+                Clear History
+            </button>
+        </section>
 
         <footer>
             Powered by Python, Scikit-learn & FastAPI
         </footer>
+
     </main>
 
     <script>
+        // 1. Get HTML elements
         const form = document.getElementById("predictionForm");
         const studyHoursInput = document.getElementById("studyHours");
         const predictButton = document.getElementById("predictButton");
+
         const result = document.getElementById("result");
         const marks = document.getElementById("marks");
         const resultMessage = document.getElementById("resultMessage");
         const error = document.getElementById("error");
 
+        const historyBody = document.getElementById("historyBody");
+        const clearHistoryButton = document.getElementById("clearHistory");
+
+        const HISTORY_KEY = "studentMarksPredictionHistory";
+
+        // 2. Load saved history from this browser
+        function loadHistory() {
+            try {
+                const savedHistory = localStorage.getItem(HISTORY_KEY);
+                const parsedHistory = savedHistory
+                    ? JSON.parse(savedHistory)
+                    : [];
+
+                if (!Array.isArray(parsedHistory)) {
+                    return [];
+                }
+
+                return parsedHistory.filter(item =>
+                    item &&
+                    Number.isFinite(item.hours) &&
+                    Number.isFinite(item.marks)
+                );
+            } catch (err) {
+                console.error("Could not load history:", err);
+                return [];
+            }
+        }
+
+        let predictionHistory = loadHistory();
+
+        // 3. Save history in browser storage
+        function saveHistory() {
+            try {
+                localStorage.setItem(
+                    HISTORY_KEY,
+                    JSON.stringify(predictionHistory)
+                );
+            } catch (err) {
+                console.error("Could not save history:", err);
+                showError(
+                    "Prediction completed, but history could not be saved."
+                );
+            }
+        }
+
+        // 4. Display prediction history
+        function renderHistory() {
+            historyBody.replaceChildren();
+
+            if (predictionHistory.length === 0) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+
+                cell.colSpan = 2;
+                cell.className = "empty-row";
+                cell.textContent = "No predictions yet.";
+
+                row.appendChild(cell);
+                historyBody.appendChild(row);
+                return;
+            }
+
+            predictionHistory.forEach(item => {
+                const row = document.createElement("tr");
+
+                const hoursCell = document.createElement("td");
+                hoursCell.textContent = String(item.hours);
+
+                const marksCell = document.createElement("td");
+                marksCell.textContent = String(item.marks);
+
+                row.appendChild(hoursCell);
+                row.appendChild(marksCell);
+
+                historyBody.appendChild(row);
+            });
+        }
+
+        // 5. Display errors
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = "block";
+        }
+
+        // 6. Handle prediction form submission
         form.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const studyHours = Number(studyHoursInput.value);
+            const rawHours = studyHoursInput.value.trim();
+            const studyHours = Number(rawHours);
 
             result.style.display = "none";
             error.style.display = "none";
 
             if (
-                studyHoursInput.value.trim() === "" ||
+                rawHours === "" ||
                 !Number.isFinite(studyHours) ||
                 studyHours < 0 ||
                 studyHours > 24
             ) {
-                error.textContent = "Please enter study hours between 0 and 24.";
-                error.style.display = "block";
+                showError(
+                    "Please enter a valid study duration between 0 and 24 hours."
+                );
                 return;
             }
 
@@ -226,30 +443,65 @@
 
                 if (!response.ok) {
                     throw new Error(
-                        data.detail
-                            ? JSON.stringify(data.detail)
-                            : "Prediction failed."
+                        typeof data.detail === "string"
+                            ? data.detail
+                            : "Prediction request failed."
                     );
                 }
 
+                if (!Number.isFinite(data.predicted_marks)) {
+                    throw new Error("The API returned an invalid prediction.");
+                }
+
+                // Display prediction
                 marks.textContent = data.predicted_marks;
                 resultMessage.textContent =
                     `For ${data.study_hours} study hours per day`;
 
                 result.style.display = "block";
 
-            } catch (err) {
-                error.textContent =
-                    "Could not connect to the backend. Make sure your FastAPI server is running at http://127.0.0.1:8000.";
-                error.style.display = "block";
+                // Add newest prediction to history
+                predictionHistory.unshift({
+                    hours: data.study_hours,
+                    marks: data.predicted_marks
+                });
 
-                console.error(err);
+                // Keep only the latest 20 records
+                predictionHistory = predictionHistory.slice(0, 20);
+
+                // Save and refresh history table
+                saveHistory();
+                renderHistory();
+
+            } catch (err) {
+                console.error("Prediction error:", err);
+
+                showError(
+                    "Could not connect to the backend. Make sure FastAPI is running at http://127.0.0.1:8000 and try again."
+                );
 
             } finally {
                 predictButton.disabled = false;
                 predictButton.textContent = "Predict My Marks";
             }
         });
+
+        // 7. Clear prediction history
+        clearHistoryButton.addEventListener("click", function () {
+            predictionHistory = [];
+
+            try {
+                localStorage.removeItem(HISTORY_KEY);
+            } catch (err) {
+                console.error("Could not clear saved history:", err);
+            }
+
+            renderHistory();
+        });
+
+        // 8. Show history when page loads
+        renderHistory();
     </script>
+
 </body>
 </html>
