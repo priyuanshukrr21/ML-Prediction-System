@@ -4,10 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
     <meta name="description" content="Student Marks Prediction System powered by Machine Learning.">
-    <title>Student Marks Predictor | Priyanshu Kumar</title>
+    <title>ML Marks Predictor | Priyanshu Kumar</title>
 
     <style>
+        :root {
+            --bg: #0b1020;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --surface: #ffffff;
+            --soft: #f5f7ff;
+            --success: #15803d;
+            --danger: #b91c1c;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,50 +29,92 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            padding: 24px;
-            color: #1e293b;
+            padding: 28px 16px;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at top left, #3730a3 0, transparent 42%),
+                linear-gradient(135deg, #0b1020, #172554 65%, #111827);
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
         }
 
         .container {
             max-width: 1050px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px #0003;
+            margin: auto;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 24px;
+            box-shadow: 0 28px 80px #0003;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 28px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            color: white;
+            font-size: 23px;
+            background: linear-gradient(135deg, #6366f1, #2563eb);
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
         }
 
         .tag {
             display: inline-block;
-            background: #dbeafe;
-            color: #1d4ed8;
             padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 16px;
+            margin-bottom: 15px;
+            border-radius: 30px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
 
         h1 {
-            font-size: 30px;
+            font-size: clamp(27px, 5vw, 38px);
+            letter-spacing: -1px;
             margin-bottom: 12px;
         }
 
         h2 {
-            font-size: 21px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 9px;
         }
 
         .description, .muted {
-            color: #64748b;
-            line-height: 1.6;
+            color: var(--muted);
+            line-height: 1.7;
         }
 
         .description {
-            margin-bottom: 24px;
+            max-width: 650px;
+            margin-bottom: 27px;
         }
 
         .muted {
@@ -66,106 +122,129 @@
         }
 
         .section {
-            margin-top: 32px;
+            margin-top: 34px;
         }
 
         label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 9px;
+            font-weight: 700;
+            font-size: 14px;
         }
 
-        input {
+        input[type="text"],
+        input[type="number"] {
+            display: block;
             width: 100%;
-            padding: 14px;
+            padding: 14px 15px;
             border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 12px;
+            outline: none;
+            background: white;
+            color: var(--text);
+            transition: border-color .2s, box-shadow .2s;
         }
 
-        button {
-            padding: 13px 16px;
-            margin-top: 14px;
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px #6366f126;
+        }
+
+        .primary-button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 14px 18px;
             border: 0;
-            border-radius: 10px;
-            background: #2563eb;
+            border-radius: 12px;
             color: white;
-            font-weight: bold;
-            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            font-weight: 750;
+            transition: transform .2s, opacity .2s;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        .primary-button:hover {
+            transform: translateY(-1px);
         }
 
-        button:disabled {
+        .primary-button:disabled {
             opacity: .6;
             cursor: wait;
+            transform: none;
         }
 
         .result {
             display: none;
-            background: #eff6ff;
-            border-radius: 14px;
-            padding: 22px;
             margin-top: 22px;
+            padding: 26px;
+            border: 1px solid #c7d2fe;
+            border-radius: 17px;
+            background: linear-gradient(135deg, #eef2ff, #eff6ff);
             text-align: center;
         }
 
         .result h2 {
-            color: #1d4ed8;
-            font-size: 16px;
+            color: #4338ca;
         }
 
         .marks {
-            font-size: 42px;
-            font-weight: bold;
-            color: #1e40af;
-            margin: 8px;
+            margin: 10px;
+            font-size: 48px;
+            font-weight: 850;
+            color: #3730a3;
+        }
+
+        .error, .success-message {
+            display: none;
+            margin-top: 14px;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .error {
-            display: none;
-            margin-top: 14px;
-            padding: 12px;
+            color: var(--danger);
             background: #fef2f2;
-            color: #b91c1c;
-            border-radius: 8px;
-            line-height: 1.5;
+        }
+
+        .success-message {
+            color: var(--success);
+            background: #f0fdf4;
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
-            margin-top: 18px;
+            gap: 15px;
+            margin-top: 19px;
         }
 
         .stat-card {
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
             min-width: 0;
+            padding: 21px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--soft);
         }
 
         .stat-card p {
+            margin-bottom: 12px;
+            color: var(--muted);
             font-size: 13px;
-            color: #64748b;
-            margin-bottom: 10px;
+            line-height: 1.5;
         }
 
         .stat-card strong {
-            font-size: 27px;
-            color: #1e40af;
+            color: #3730a3;
+            font-size: 28px;
             overflow-wrap: anywhere;
         }
 
         .chart-card {
             margin-top: 18px;
-            padding: 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
         }
 
         canvas {
@@ -175,8 +254,8 @@
         }
 
         .table-wrapper {
+            margin-top: 17px;
             overflow-x: auto;
-            margin-top: 14px;
         }
 
         table {
@@ -186,65 +265,193 @@
         }
 
         th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
             text-align: left;
+            white-space: nowrap;
         }
 
         th {
-            background: #eff6ff;
-            color: #1e40af;
+            background: #eef2ff;
+            color: #3730a3;
         }
 
         .empty {
             text-align: center;
-            color: #64748b;
+            color: var(--muted);
+            padding: 24px;
         }
 
-        .clear-button {
-            background: #e2e8f0;
-            color: #334155;
-        }
-
-        .clear-button:hover {
-            background: #cbd5e1;
-        }
-
-        .notice {
-            background: #fffbeb;
-            color: #92400e;
-            padding: 12px;
+        .secondary-button {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
             border-radius: 10px;
-            margin-top: 14px;
-            font-size: 13px;
-            line-height: 1.5;
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .privacy-note {
+            margin-top: 16px;
+            padding: 13px;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
         }
 
         footer {
+            margin-top: 35px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
             text-align: center;
-            margin-top: 32px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: #64748b;
+            color: var(--muted);
             font-size: 13px;
-            line-height: 1.8;
+            line-height: 2;
         }
 
         footer strong {
-            color: #1d4ed8;
+            color: #4338ca;
         }
 
-        @media (max-width: 650px) {
+        /* Professional welcome popup */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgb(4 9 25 / 82%);
+            backdrop-filter: blur(9px);
+            overflow-y: auto;
+        }
+
+        .welcome-overlay[hidden] {
+            display: none;
+        }
+
+        .welcome-card {
+            position: relative;
+            width: 100%;
+            max-width: 490px;
+            overflow: hidden;
+            border: 1px solid rgb(255 255 255 / 45%);
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 30px 100px #0006;
+            animation: enter .35s ease-out;
+        }
+
+        .welcome-banner {
+            padding: 30px 28px 25px;
+            color: white;
+            background:
+                radial-gradient(circle at top right, #818cf8 0, transparent 45%),
+                linear-gradient(135deg, #111827, #312e81 70%, #4338ca);
+        }
+
+        .welcome-logo {
+            display: grid;
+            place-items: center;
+            width: 55px;
+            height: 55px;
+            margin-bottom: 21px;
+            border: 1px solid #ffffff55;
+            border-radius: 17px;
+            background: #ffffff18;
+            font-size: 28px;
+        }
+
+        .welcome-eyebrow {
+            margin-bottom: 10px;
+            color: #c7d2fe;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+        }
+
+        .welcome-banner h2 {
+            margin-bottom: 12px;
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .welcome-banner p {
+            color: #e0e7ff;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        .welcome-content {
+            padding: 26px 28px 28px;
+        }
+
+        .welcome-content .field {
+            margin-bottom: 17px;
+        }
+
+        .welcome-content input[type="text"] {
+            background: #f8fafc;
+        }
+
+        .consent-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 18px 0;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .consent-row input {
+            flex: 0 0 auto;
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            accent-color: var(--primary);
+        }
+
+        .welcome-footer {
+            margin-top: 16px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .welcome-status {
+            display: none;
+            margin-top: 12px;
+            color: var(--danger);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @keyframes enter {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
             body {
                 padding: 12px;
             }
 
             .container {
-                padding: 20px 16px;
-            }
-
-            h1 {
-                font-size: 25px;
+                padding: 22px 17px;
+                border-radius: 18px;
             }
 
             .stats {
@@ -252,29 +459,130 @@
             }
 
             .stat-card {
-                padding: 15px;
+                padding: 17px;
+            }
+
+            .welcome-banner {
+                padding: 24px 21px;
+            }
+
+            .welcome-content {
+                padding: 22px 21px;
+            }
+
+            .welcome-banner h2 {
+                font-size: 25px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
             }
         }
     </style>
 </head>
 
 <body>
+
+<!-- WELCOME AND VISITOR DETAILS POPUP -->
+<div class="welcome-overlay" id="welcomeOverlay">
+    <section class="welcome-card" aria-labelledby="welcomeTitle">
+
+        <div class="welcome-banner">
+            <div class="welcome-logo" aria-hidden="true">🎓</div>
+            <div class="welcome-eyebrow">MACHINE LEARNING PROJECT</div>
+
+            <h2 id="welcomeTitle">
+                Welcome to My ML Prediction Marks System
+            </h2>
+
+            <p>
+                Predict your marks, explore your study insights and
+                experience Machine Learning in action.
+            </p>
+        </div>
+
+        <div class="welcome-content">
+            <form id="visitorForm">
+
+                <div class="field">
+                    <label for="visitorName">Your Full Name</label>
+                    <input
+                        id="visitorName"
+                        type="text"
+                        minlength="2"
+                        maxlength="80"
+                        placeholder="Enter your name"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="visitorLocation">City / Location</label>
+                    <input
+                        id="visitorLocation"
+                        type="text"
+                        minlength="2"
+                        maxlength="120"
+                        placeholder="e.g. Ludhiana, Punjab"
+                        autocomplete="address-level2"
+                        required
+                    >
+                </div>
+
+                <label class="consent-row" for="visitorConsent">
+                    <input id="visitorConsent" type="checkbox" required>
+                    <span>
+                        I agree to share my name and city/location so the
+                        website owner can maintain visitor records.
+                    </span>
+                </label>
+
+                <button class="primary-button" id="visitorSubmit" type="submit">
+                    Continue to Website →
+                </button>
+
+                <p class="welcome-status" id="visitorStatus" role="alert"></p>
+            </form>
+
+            <div class="welcome-footer">
+                Your details are submitted to the website's visitor database
+                only after you provide consent.<br>
+                <strong>Powered by Priyanshu Kumar</strong>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<!-- MAIN WEBSITE -->
 <main class="container">
+
+    <div class="brand-row">
+        <div class="brand-icon">🎓</div>
+        <div>
+            <div class="brand-name">ML Marks Predictor</div>
+            <div class="brand-subtitle">Student Performance Intelligence</div>
+        </div>
+    </div>
 
     <span class="tag">MACHINE LEARNING PROJECT</span>
 
-    <h1>Student Marks Predictor 🎓</h1>
+    <h1>Student Marks Predictor</h1>
 
     <p class="description">
-        Enter your daily study hours to estimate marks using a trained
-        Machine Learning model.
+        Enter your daily study hours to estimate your marks using a trained
+        Machine Learning model. Explore your prediction history and insights
+        in one place.
     </p>
 
     <!-- PREDICTION FORM -->
     <section>
         <form id="predictionForm">
             <label for="studyHours">Study Hours Per Day</label>
-
             <input
                 id="studyHours"
                 type="number"
@@ -285,7 +593,7 @@
                 required
             >
 
-            <button id="predictButton" type="submit">
+            <button class="primary-button" id="predictButton" type="submit">
                 Predict My Marks
             </button>
         </form>
@@ -301,14 +609,14 @@
 
     <!-- VIEWER ANALYTICS -->
     <section class="section">
-        <h2>Website Viewer Analytics 📊</h2>
+        <h2>Website Analytics</h2>
         <p class="muted">
-            Basic website usage statistics recorded in this browser.
+            Basic usage statistics recorded in this browser.
         </p>
 
         <div class="stats">
             <div class="stat-card">
-                <p>Page Views</p>
+                <p>Page Views in This Browser</p>
                 <strong id="pageViews">0</strong>
             </div>
 
@@ -323,17 +631,17 @@
             </div>
         </div>
 
-        <div class="notice">
-            Note: These viewer statistics are stored in this browser only.
-            They do not represent the total visitors across all users or devices.
-        </div>
+        <p class="privacy-note">
+            These browser analytics are local to this browser. They are not
+            the total number of visitors across the internet.
+        </p>
     </section>
 
     <!-- PREDICTION ANALYTICS -->
     <section class="section">
         <h2>Prediction Analytics</h2>
         <p class="muted">
-            Statistics calculated from prediction history saved in this browser.
+            A summary of the prediction history saved in this browser.
         </p>
 
         <div class="stats">
@@ -365,7 +673,7 @@
             <canvas
                 id="predictionChart"
                 role="img"
-                aria-label="Chart showing study hours and predicted marks">
+                aria-label="Study hours versus predicted marks chart">
             </canvas>
 
             <p class="muted" id="chartMessage">
@@ -377,9 +685,7 @@
     <!-- HISTORY -->
     <section class="section">
         <h2>Prediction History</h2>
-        <p class="muted">
-            The latest 20 predictions are saved in this browser.
-        </p>
+        <p class="muted">The latest 20 predictions saved in this browser.</p>
 
         <div class="table-wrapper">
             <table>
@@ -399,32 +705,34 @@
             </table>
         </div>
 
-        <button type="button" class="clear-button" id="clearHistory">
+        <button type="button" class="secondary-button" id="clearHistory">
             Clear Prediction History
         </button>
     </section>
 
-    <!-- BRANDING -->
     <footer>
         <div>Student Marks Prediction System</div>
-        <div>Built with Python, Scikit-learn &amp; FastAPI</div>
-        <div>Powered by <strong>Priyanshu Kumar</strong> 🚀</div>
+        <div>Built with Python, Scikit-learn and FastAPI</div>
+        <div>Designed &amp; Developed by <strong>Priyanshu Kumar</strong></div>
+        <div><strong>Powered by Priyanshu Kumar 🚀</strong></div>
     </footer>
 
 </main>
 
+
 <script>
-    // IMPORTANT:
-    // This URL is for local development.
-    // Change it when your backend is deployed online.
+    // LOCAL DEVELOPMENT BACKEND URL
     const API_URL = "http://127.0.0.1:8000/predict";
+    const VISITOR_API_URL = "http://127.0.0.1:8000/visitors";
 
     const HISTORY_KEY = "studentMarksPredictionHistory";
     const PAGE_VIEWS_KEY = "studentMarksPageViews";
     const SESSIONS_KEY = "studentMarksBrowserSessions";
     const SESSION_ACTIVE_KEY = "studentMarksSessionActive";
     const SESSION_PREDICTIONS_KEY = "studentMarksSessionPredictions";
+    const VISITOR_SAVED_KEY = "studentMarksVisitorSaved";
 
+    // Elements
     const form = document.getElementById("predictionForm");
     const hoursInput = document.getElementById("studyHours");
     const predictButton = document.getElementById("predictButton");
@@ -434,13 +742,16 @@
     const errorElement = document.getElementById("error");
     const historyBody = document.getElementById("historyBody");
 
-    // Safely read numeric values from localStorage.
+    const welcomeOverlay = document.getElementById("welcomeOverlay");
+    const visitorForm = document.getElementById("visitorForm");
+    const visitorStatus = document.getElementById("visitorStatus");
+    const visitorSubmit = document.getElementById("visitorSubmit");
+
     function readCounter(key) {
         try {
             const value = Number(localStorage.getItem(key) || 0);
             return Number.isSafeInteger(value) && value >= 0 ? value : 0;
-        } catch (error) {
-            console.error("Could not read browser analytics:", error);
+        } catch {
             return 0;
         }
     }
@@ -449,15 +760,14 @@
         try {
             localStorage.setItem(key, String(value));
         } catch (error) {
-            console.error("Could not save browser analytics:", error);
+            console.error("Could not save analytics:", error);
         }
     }
 
-    // Record a page view in this browser.
+    // Local browser analytics only.
     function recordPageView() {
         writeCounter(PAGE_VIEWS_KEY, readCounter(PAGE_VIEWS_KEY) + 1);
 
-        // Count a browser session once per sessionStorage lifecycle.
         try {
             if (sessionStorage.getItem(SESSION_ACTIVE_KEY) !== "yes") {
                 writeCounter(SESSIONS_KEY, readCounter(SESSIONS_KEY) + 1);
@@ -478,33 +788,99 @@
         document.getElementById("browserSessions").textContent =
             readCounter(SESSIONS_KEY);
 
-        let sessionPredictions = 0;
+        let count = 0;
 
         try {
-            sessionPredictions = Number(
+            count = Number(
                 sessionStorage.getItem(SESSION_PREDICTIONS_KEY) || 0
             );
 
-            if (!Number.isSafeInteger(sessionPredictions) ||
-                sessionPredictions < 0) {
-                sessionPredictions = 0;
-            }
-        } catch (error) {
-            console.error("Could not read session predictions:", error);
+            if (!Number.isSafeInteger(count) || count < 0) count = 0;
+        } catch {
+            count = 0;
         }
 
-        document.getElementById("sessionPredictions").textContent =
-            sessionPredictions;
+        document.getElementById("sessionPredictions").textContent = count;
     }
 
-    // Load saved prediction history.
+    // Welcome popup and database submission.
+    function checkVisitorStatus() {
+        try {
+            if (localStorage.getItem(VISITOR_SAVED_KEY) === "yes") {
+                welcomeOverlay.hidden = true;
+            }
+        } catch (error) {
+            console.error("Could not check visitor status:", error);
+        }
+    }
+
+    visitorForm.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        visitorStatus.style.display = "none";
+
+        const name = document.getElementById("visitorName").value.trim();
+        const location = document.getElementById("visitorLocation").value.trim();
+        const consent = document.getElementById("visitorConsent").checked;
+
+        if (name.length < 2 || location.length < 2 || !consent) {
+            visitorStatus.textContent =
+                "Please enter a valid name and location and provide consent.";
+            visitorStatus.style.display = "block";
+            return;
+        }
+
+        visitorSubmit.disabled = true;
+        visitorSubmit.textContent = "Saving your details...";
+
+        try {
+            const response = await fetch(VISITOR_API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name,
+                    location,
+                    consent
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || "Unable to save your details.");
+            }
+
+            try {
+                localStorage.setItem(VISITOR_SAVED_KEY, "yes");
+            } catch (error) {
+                console.error("Could not save browser status:", error);
+            }
+
+            welcomeOverlay.hidden = true;
+
+        } catch (error) {
+            console.error("Visitor submission error:", error);
+
+            visitorStatus.textContent =
+                "Your details could not be saved. Please make sure the backend " +
+                "is running, then try again.";
+
+            visitorStatus.style.display = "block";
+
+        } finally {
+            visitorSubmit.disabled = false;
+            visitorSubmit.textContent = "Continue to Website →";
+        }
+    });
+
+    // Prediction history
     function loadHistory() {
         try {
             const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
 
-            if (!Array.isArray(data)) {
-                return [];
-            }
+            if (!Array.isArray(data)) return [];
 
             return data.filter(item =>
                 item &&
@@ -512,8 +888,7 @@
                 Number.isFinite(item.marks) &&
                 typeof item.date === "string"
             ).slice(0, 20);
-        } catch (error) {
-            console.error("Could not load prediction history:", error);
+        } catch {
             return [];
         }
     }
@@ -524,7 +899,7 @@
         try {
             localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         } catch (error) {
-            console.error("Could not save prediction history:", error);
+            console.error("Could not save history:", error);
             showError("Prediction worked, but history could not be saved.");
         }
     }
@@ -536,13 +911,11 @@
 
     function formatDate(dateString) {
         const date = new Date(dateString);
-
         return Number.isNaN(date.getTime())
             ? "Unknown"
             : date.toLocaleString();
     }
 
-    // Display prediction history safely.
     function renderHistory() {
         historyBody.replaceChildren();
 
@@ -556,7 +929,6 @@
         } else {
             history.forEach(item => {
                 const row = historyBody.insertRow();
-
                 row.insertCell().textContent = formatDate(item.date);
                 row.insertCell().textContent = String(item.hours);
                 row.insertCell().textContent = String(item.marks);
@@ -590,19 +962,17 @@
             highest.toFixed(2);
     }
 
-    // Draw the prediction chart.
+    // Canvas chart
     function drawChart() {
         const canvas = document.getElementById("predictionChart");
         const ctx = canvas.getContext("2d");
         const message = document.getElementById("chartMessage");
 
         const width = canvas.clientWidth;
-
-        if (width <= 0) {
-            return;
-        }
-
         const height = 280;
+
+        if (width <= 0) return;
+
         const ratio = window.devicePixelRatio || 1;
 
         canvas.width = Math.round(width * ratio);
@@ -616,14 +986,9 @@
             return;
         }
 
-        message.textContent =
-            "Each point represents a saved prediction.";
+        message.textContent = "Each point represents a saved prediction.";
 
-        const left = 45;
-        const right = 18;
-        const top = 20;
-        const bottom = 42;
-
+        const left = 45, right = 18, top = 20, bottom = 42;
         const plotWidth = width - left - right;
         const plotHeight = height - top - bottom;
 
@@ -657,12 +1022,12 @@
 
             ctx.beginPath();
             ctx.arc(x, y, 5, 0, Math.PI * 2);
-            ctx.fillStyle = "#2563eb";
+            ctx.fillStyle = "#4f46e5";
             ctx.fill();
         });
     }
 
-    // Call the FastAPI prediction endpoint.
+    // Prediction API
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
@@ -689,19 +1054,13 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    study_hours: hours
-                })
+                body: JSON.stringify({ study_hours: hours })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data.detail
-                        ? JSON.stringify(data.detail)
-                        : "Prediction request failed."
-                );
+                throw new Error(data.detail || "Prediction request failed.");
             }
 
             if (!Number.isFinite(data.predicted_marks)) {
@@ -721,11 +1080,9 @@
             });
 
             history = history.slice(0, 20);
-
             saveHistory();
             renderHistory();
 
-            // Count successful predictions during this browser session.
             try {
                 const count = Number(
                     sessionStorage.getItem(SESSION_PREDICTIONS_KEY) || 0
@@ -740,7 +1097,7 @@
                     )
                 );
             } catch (error) {
-                console.error("Could not update session counter:", error);
+                console.error("Could not update session statistics:", error);
             }
 
             renderViewerAnalytics();
@@ -749,8 +1106,7 @@
             console.error("Prediction error:", error);
 
             showError(
-                "Could not connect to the backend. Make sure FastAPI is " +
-                "running at http://127.0.0.1:8000."
+                "Could not connect to the backend. Make sure FastAPI is running."
             );
         } finally {
             predictButton.disabled = false;
@@ -758,14 +1114,13 @@
         }
     });
 
-    // Clear only prediction history, not viewer analytics.
     document.getElementById("clearHistory").addEventListener("click", () => {
         history = [];
 
         try {
             localStorage.removeItem(HISTORY_KEY);
         } catch (error) {
-            console.error("Could not clear prediction history:", error);
+            console.error("Could not clear history:", error);
         }
 
         renderHistory();
@@ -773,9 +1128,11 @@
 
     window.addEventListener("resize", drawChart);
 
-    // Initialize the page.
+    // Initialize
     recordPageView();
     renderHistory();
+    checkVisitorStatus();
 </script>
+
 </body>
 </html>
